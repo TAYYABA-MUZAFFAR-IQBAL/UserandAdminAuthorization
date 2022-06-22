@@ -95,7 +95,7 @@ function EmployeeFunc() {
   this.GetAllEmployee = async (req, res) => {
     EmpSchema.find({}, (err, users) => {
       if (err) {
-        console.log("you have no access");
+        console.log("Error occured in Exraction");
         res.status(500).json({ errmsg: err });
         return;
       } else {
@@ -106,7 +106,7 @@ function EmployeeFunc() {
        return res.status(200).json({ msg: users });
         
       }
-    });
+    }).select('-password');
   };
   //get employee data By Id
   this.GetEmployeeById = (req, res) => {
@@ -120,7 +120,7 @@ function EmployeeFunc() {
         return res.json({ status: true });
         
       }
-    });
+    }).select('-password');
   };
 
   //Update Employee
@@ -134,11 +134,12 @@ function EmployeeFunc() {
         console.log("not able to update data from...");
         return;
       } else {
-        (employeeById.first_name = req.body.first_name),
-          (employeeById.last_name = req.body.last_name),
-          (employeeById.email = req.body.email),
-          (employeeById.password = req.body.password);
-        employeeById.role = req.body.role;
+        [first_name, last_name, email, password, role] = req.body;
+        // (employeeById.first_name = req.body.first_name),
+        //   (employeeById.last_name = req.body.last_name),
+        //   (employeeById.email = req.body.email),
+        //   (employeeById.password = req.body.password);
+        //    employeeById.role = req.body.role;
         //save the updated data
         employeeById.save((err, employeeById) => {
           if (err) {
