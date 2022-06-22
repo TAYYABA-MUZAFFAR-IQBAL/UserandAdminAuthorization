@@ -11,20 +11,20 @@ router.route("/Login").post(Funccontroller.LoginEmployee);
 //get all employess rote
 router
   .route("/GetAcessToAllRecord")
-  .get([Verify.VerifyLoginUser,Verify.GetAllRecordMiddleware],Funccontroller.GetAllEmployee);
+  .get([Verify.VerifyLoginUser,Verify.checkIsAdmin],Funccontroller.GetAllEmployee);
 
   //get employee by id route
 router
   .route("/Get/:id")
-  .get([Verify.VerifyLoginUser,Verify.NotAdmin,Verify.checkIsAdmin],Funccontroller.GetEmployeeById);
+  .get([Verify.VerifyLoginUser,Verify.checkIsAdmin],Funccontroller.GetEmployeeById);
   //update route 
   router
   .route("/Update/:id")
-  .put([Verify.VerifyLoginUser,Verify.NotAdmin,Verify.checkIsAdmin],Funccontroller.UpdateEmployee);
+  .put([Verify.VerifyLoginUser,Verify.checkIsAdmin],Funccontroller.UpdateEmployee);
   //delete route
   router
   .route("/Delete/:id")
-  .delete([Verify.VerifyLoginUser,Verify.NotAdmin,Verify.checkIsAdmin],Funccontroller.DeleteEmployee);
+  .delete([Verify.VerifyLoginUser,Verify.checkIsAdmin],Funccontroller.DeleteEmployee);
   
 
 module.exports = router;
