@@ -36,19 +36,7 @@ const middlewareAuthorization = {
       });
     }
   },
-  //Get All Users Only Admin
-  GetAllRecordMiddleware: async (req, res, next) => {
-    const userbyemail = await EmpSchema.findOne({ email: req.apiUser.email });
 
-    if (userbyemail.role === "Admin") {
-      console.log("Welcome Admin!!");
-      next();
-    } else {
-       console.log("you Are Not Admin...");
-     return res.json({message: "No access to All Record"});
-      
-    }
-  },
   //Check Admin Middle ware
   checkIsAdmin: async (req, res, next) => {
     const userbyemail = await EmpSchema.findOne({ email: req.apiUser.email });
@@ -57,24 +45,23 @@ const middlewareAuthorization = {
       console.log("Welcome Admin!!");
       next();
     } else {
-       next();
-         
+      const userbyemail = await EmpSchema.find({ email: req.apiUser.email });
+      console.log("login user Id", userbyemail[0].id);
+      console.log("parameter Id", req.params.id);
+      if (!(userbyemail.role === "Admin")){
+      if (userbyemail[0].id === req.params.id) {
+        next();
+      } else {
+        console.log("you have no access to extract others ID");
+        return res.json({ message: "Acess Issue its not the id of Login user" });
+      }
+    }else{
+    next()
     }
-  },
-
-  //User Access Middle ware
-
-  NotAdmin: async (req, res, next) => {
-    const userbyemail = await EmpSchema.find({ email: req.apiUser.email });
-    console.log("login user Id",userbyemail[0].id);
-    console.log("parameter Id",req.params.id);
-        if (userbyemail[0].id === req.params.id) {
-      next();
-    } else {
-      console.log("you have no access to extract others ID");
-      return res.json({message: "Acess Issue its not the id of Login user"});
+      console.log("you Are Not Admin...");
+      return 
+      
     }
-    
   },
 };
 module.exports = middlewareAuthorization;
