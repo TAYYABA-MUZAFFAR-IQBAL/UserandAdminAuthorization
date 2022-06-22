@@ -129,7 +129,7 @@ function EmployeeFunc() {
         employeeById.first_name = req.body.first_name,
         employeeById.last_name = req.body.last_name,
         employeeById.email = req.body.email,
-        employeeById.password = req.body.password;
+          employeeById.password = req.body.password;
         employeeById.role = req.body.role;
         //save the updated data
         employeeById.save((err, employeeById) => {
