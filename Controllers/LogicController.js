@@ -55,39 +55,33 @@ function EmployeeFunc() {
 
   //Login Employee
   this.LoginEmployee = async (req, res) => {
-    
     try {
       // Get user input
       const { email, password } = req.body;
-  
+
       // Validate user input
       if (!(email && password)) {
         res.status(400).send("All input is required");
       }
       // Validate if user exist in our database
       const user = await EmpSchema.findOne({ email });
-  
+
       if (user && (await bcrypt.compare(password, user.password))) {
         // Create token
-        const token = jwt.sign(
-          { email: email },
-          process.env.TOKEN_KEY,
-          {
-              expiresIn: 864000 ,
-          }
-          
-        );
-          // user
-          console.log("Welcome 🙌",user.first_name)
-        res.status(200).json({status: true, token: token , message:"Welcome 🙌 "});
-    
-      }else{
+        const token = jwt.sign({ email: email }, process.env.TOKEN_KEY, {
+          expiresIn: 864000,
+        });
+        // user
+        console.log("Welcome 🙌", user.first_name);
+        res
+          .status(200)
+          .json({ status: true, token: token, message: "Welcome 🙌 " });
+      } else {
         res.status(400).json("Invalid Credentials");
       }
-      
     } catch (err) {
       console.log(err);
-      return res.json({message:"user not exsists...please register"})
+      return res.json({ message: "user not exsists...please register" });
     }
   };
 
@@ -102,11 +96,10 @@ function EmployeeFunc() {
         console.log("All Employee List", users);
         console.log(
           "Hey Admin you have Extracted All user data Successfully...."
-        );  
-       return res.status(200).json({ msg: users });
-        
+        );
+        return res.status(200).json({ msg: users });
       }
-    }).select('-password');
+    }).select("-password");
   };
   //get employee data By Id
   this.GetEmployeeById = (req, res) => {
@@ -118,9 +111,8 @@ function EmployeeFunc() {
         console.log("employee", employee);
         console.log("Employee by Id is Extracted Successfully.....");
         return res.json({ status: true });
-        
       }
-    }).select('-password');
+    }).select("-password");
   };
 
   //Update Employee
@@ -134,12 +126,11 @@ function EmployeeFunc() {
         console.log("not able to update data from...");
         return;
       } else {
-        [first_name, last_name, email, password, role] = req.body;
-        // (employeeById.first_name = req.body.first_name),
-        //   (employeeById.last_name = req.body.last_name),
-        //   (employeeById.email = req.body.email),
-        //   (employeeById.password = req.body.password);
-        //    employeeById.role = req.body.role;
+        employeeById.first_name = req.body.first_name,
+        employeeById.last_name = req.body.last_name,
+        employeeById.email = req.body.email,
+        employeeById.password = req.body.password;
+        employeeById.role = req.body.role;
         //save the updated data
         employeeById.save((err, employeeById) => {
           if (err) {
