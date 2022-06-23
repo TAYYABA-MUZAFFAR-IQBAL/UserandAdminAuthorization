@@ -37,7 +37,7 @@ function EmployeeFunc() {
 
       // Create token
       const token = jwt.sign(
-        { user_id: user._id, email },
+        { user_id: user._id,first_name,last_name, email,role},
         process.env.TOKEN_KEY,
         {
           expiresIn: "2h",
@@ -45,9 +45,11 @@ function EmployeeFunc() {
       );
       // save user token
       user.token = token;
-
-      // return new user
-      res.status(201).json(user);
+           return res
+          .status(200)
+          .json({ status: true, token: token, user,message: "Register Sucessfully.. " });
+       
+      
     } catch (err) {
       console.log(err);
     }
@@ -68,14 +70,16 @@ function EmployeeFunc() {
 
       if (user && (await bcrypt.compare(password, user.password))) {
         // Create token
+
+        
         const token = jwt.sign({ email: email }, process.env.TOKEN_KEY, {
-          expiresIn: 864000,
+          expiresIn: '2h',
         });
         // user
         console.log("Welcome 🙌", user.first_name);
         res
           .status(200)
-          .json({ status: true, token: token, message: "Welcome 🙌 " });
+          .json({ status: true, token: token, user ,message: "Welcome 🙌 " });
       } else {
         res.status(400).json("Invalid Credentials");
       }
