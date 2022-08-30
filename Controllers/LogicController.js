@@ -72,7 +72,7 @@ function EmployeeFunc() {
         // Create token
 
         
-        const token = jwt.sign({ email: email }, process.env.TOKEN_KEY, {
+        const token = jwt.sign({ user_id: user._id,email}, process.env.TOKEN_KEY, {
           expiresIn: '2h',
         });
         // user
@@ -160,6 +160,22 @@ function EmployeeFunc() {
         res.status(200).json({ msg: student });
         console.log("deleted sucessfully");
       }
+    });
+  };
+  this.UploadFile = async function(req) {
+    var dir = './../uploads/tmp_media';
+    const fileName = `${dir}/${req.params.id}.pdf`;
+    fs.readFile(fileName, (err, data) => {
+      if (err) throw err;
+      const params = {
+        Bucket: "optimacrmbucket", // pass your bucket name
+        Key: "CDN.pdf", // file will be saved as optimacrmbucket/fileNamein params
+        Body: JSON.stringify(data, null, 2),
+      };
+      s3.upload(params, function(s3Err, data) {
+        if (s3Err) throw s3Err;
+        console.log(`File uploaded successfully at ${data.Location}`);
+      });
     });
   };
 }
